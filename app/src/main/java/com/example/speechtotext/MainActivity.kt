@@ -1,13 +1,13 @@
 package com.example.speechtotext
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         voiceBtn.setOnClickListener{
-            speak();
+            speak()
         }
     }
 
@@ -33,9 +33,13 @@ class MainActivity : AppCompatActivity() {
         try {
             //if there is no error so SpeechToText Dialog
             startActivityForResult(mIntent, REQUEST_CODE_SPEECH_INPUT)
-        }catch (e: Exception){
+        }catch (e: ActivityNotFoundException){
             //If there is error display error message and toast.
-            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.speech_not_supported),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -44,8 +48,9 @@ class MainActivity : AppCompatActivity() {
         when(requestCode){
             REQUEST_CODE_SPEECH_INPUT -> {
                 if(resultCode == Activity.RESULT_OK && null != data){
-                    val result = data.getStringArrayExtra(RecognizerIntent.EXTRA_RESULTS)
-                    textView.text = result[0]
+                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    var output = result[0]
+                    textView.text = output
                 }
             }
         }
