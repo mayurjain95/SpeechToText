@@ -51,8 +51,13 @@ class MainActivity : AppCompatActivity() {
                     val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     var output = result[0]
                     textView.text = output
+                    processText(output)
                 }
             }
         }
     }
+}
+private fun processText(text:String){
+    
+
 }
